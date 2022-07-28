@@ -46,6 +46,7 @@ public class CitizensApplication {
         System.out.println("Length of longest name: " + getTheLongestLastName(people).length());
         System.out.println("Longest last name: " + getTheLongestLastName(people));
         System.out.println("List of longest last names: " + collectAllLastNamesWithLength13(people));
+        System.out.println("Total age of all males: " + collectTotalAgeOfAllMales(people));
     }
 
     private Map<String, Long> createNameSummary(List<Person> people) {
@@ -185,13 +186,17 @@ public class CitizensApplication {
                 .collect(Collectors.toSet());
     }
 
-    private Integer countAllNonMaleNonFemaleObjects(List<Person> people) {
-        return null;
+    private Long countAllNonMaleNonFemaleObjects(List<Person> people) {
+        return people.stream()
+                .filter(p -> !Set.of("M", "F").contains(p.getSex()))
+                .count();
     }
 
-    // zadanie z gwiazdka
     private Long collectTotalAgeOfAllMales(List<Person> people) {
-        return null;
+        return people.stream()
+                .filter(p -> "M".equals(p.getSex()))
+                .map(Person::getAge)
+                .mapToLong(Long::longValue)
+                .sum();
     }
-
 }

@@ -8,10 +8,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CitizensApplication {
@@ -43,6 +40,12 @@ public class CitizensApplication {
 //        for (Map.Entry<String, Long> nameCount : nameSummary.entrySet()) {
 //            System.out.println("There are " + nameCount.getValue() + " persons with name " + nameCount.getKey());
 //        }
+
+        Map<String, Double> averageAgeBySex = averageAgeBySex(people);
+        System.out.println("#############");
+        System.out.println("Length of longest name: " + getTheLongestLastName(people).length());
+        System.out.println("Longest last name: " + getTheLongestLastName(people));
+        System.out.println("List of longest last names: " + collectAllLastNamesWithLength13(people));
     }
 
     private Map<String, Long> createNameSummary(List<Person> people) {
@@ -152,4 +155,43 @@ public class CitizensApplication {
         return people.stream()
                 .collect(Collectors.groupingBy(Person::getSex));
     }
+
+    public static Map<String, Double> averageAgeBySex(List<Person> people) {
+        return people.stream()
+                .filter(person -> Set.of("M", "F").contains(person.getSex()))
+                .collect(Collectors.groupingBy(
+                        Person::getSex,
+                        Collectors.averagingDouble(Person::getAge)
+                ));
+    }
+
+    private List<Person> collectWomenOlderThan40(List<Person> people) {
+        return people.stream()
+                .filter(person -> "F".equals(person.getSex()) && person.getAge() > 40)
+                .collect(Collectors.toList());
+    }
+
+    private String getTheLongestLastName(List<Person> people) {
+        return people.stream()
+                .map(Person::getLastName)
+                .max(Comparator.comparing(String::length))
+                .orElse("");
+    }
+
+    private Set<String> collectAllLastNamesWithLength13(List<Person> people) {
+        return people.stream()
+                .map(Person::getLastName)
+                .filter(whatever -> whatever.length() == 13)
+                .collect(Collectors.toSet());
+    }
+
+    private Integer countAllNonMaleNonFemaleObjects(List<Person> people) {
+        return null;
+    }
+
+    // zadanie z gwiazdka
+    private Long collectTotalAgeOfAllMales(List<Person> people) {
+        return null;
+    }
+
 }
